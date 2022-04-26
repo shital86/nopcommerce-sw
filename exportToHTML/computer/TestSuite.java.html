@@ -1,0 +1,88 @@
+<html>
+<head>
+<title>TestSuite.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #000080; font-weight: bold;}
+.s1 { color: #000000;}
+.s2 { color: #008000; font-weight: bold;}
+.s3 { color: #808080; font-style: italic;}
+.s4 { color: #0000ff;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+TestSuite.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span>computer;
+
+<span class="s0">import </span>org.junit.Assert;
+<span class="s0">import </span>org.junit.Before;
+<span class="s0">import </span>org.junit.Test;
+<span class="s0">import </span>org.openqa.selenium.By;
+<span class="s0">import </span>org.openqa.selenium.WebElement;
+<span class="s0">import </span>org.openqa.selenium.support.ui.Select;
+<span class="s0">import </span>utilities.Utility;
+
+<span class="s0">import </span>java.io.InterruptedIOException;
+<span class="s0">import </span>java.util.List;
+
+<span class="s0">public class </span>TestSuite <span class="s0">extends </span>Utility {
+    String baseUrl = <span class="s2">&quot;https://demo.nopcommerce.com/&quot;</span>;
+
+    @Before
+    <span class="s0">public void </span>setUp() {
+<span class="s3">//Open the baseUrl</span>
+        openBrowser(baseUrl);
+    }
+
+    @Test
+    <span class="s0">public void </span>testname() {
+        clickOnElement(By.linkText(<span class="s2">&quot;Computers&quot;</span>));
+        clickOnElement(By.linkText(<span class="s2">&quot;Desktops&quot;</span>));
+        String expected = <span class="s2">&quot;Desktops&quot;</span>;
+        String actual = getTextFromElement(By.xpath(<span class="s2">&quot;//h1[contains(text(),'Desktops')]&quot;</span>));
+        Assert.assertEquals(expected, actual);
+        List&lt;WebElement&gt; list = list(By.xpath(<span class="s2">&quot;//div[@class='prices']&quot;</span>));
+        selctByVisibleTextFromDropDown(By.xpath(<span class="s2">&quot;//select[@id='products-orderby']&quot;</span>), <span class="s2">&quot;Price: Low to High&quot;</span>);
+        List&lt;WebElement&gt; listsAllAfterSort = list(By.xpath(<span class="s2">&quot;//div[@class='prices']&quot;</span>));
+
+        <span class="s0">if </span>(list != listsAllAfterSort) {
+            System.out.println(<span class="s2">&quot;Pass&quot;</span>);
+        }
+        WebElement productorderby = driver.findElement(By.xpath(<span class="s2">&quot;//select[@id='products-orderby']&quot;</span>));
+        Select select = <span class="s0">new </span>Select(productorderby);
+        select.selectByIndex(<span class="s4">4</span>);
+
+    }
+
+    @Test
+    <span class="s0">public void </span>verifyProductAddedToShoppingCartSuccessFully() <span class="s0">throws </span>InterruptedIOException, InterruptedException {
+        clickOnElement(By.linkText(<span class="s2">&quot;Computers&quot;</span>));
+        clickOnElement(By.linkText(<span class="s2">&quot;Desktops&quot;</span>));
+        clickOnElement(By.xpath(<span class="s2">&quot;//body/div[6]/div[3]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/div[1]/div[2]/div[1]/div[2]/div[3]/div[2]/button[1]&quot;</span>));
+        String expectedMessage1 = <span class="s2">&quot;Build your own computer&quot;</span>;
+        String actualMessage1 = getTextFromElement(By.xpath(<span class="s2">&quot;//h2/a[contains(text(),'Build your own computer')]&quot;</span>));
+        Assert.assertEquals(<span class="s2">&quot;Not correct Page!&quot;</span>, expectedMessage1, actualMessage1);
+        clickOnElement(By.xpath(<span class="s2">&quot;//a[contains(text(),'Build your own computer')]&quot;</span>));
+        selctByVisibleTextFromDropDown(By.xpath(<span class="s2">&quot;//select[@id='product_attribute_1']&quot;</span>), <span class="s2">&quot;2.2 GHz Intel Pentium Dual-Core E2200&quot;</span>);
+        selctByVisibleTextFromDropDown(By.xpath(<span class="s2">&quot;//select[@id='product_attribute_2']&quot;</span>), <span class="s2">&quot;8GB [+$60.00]&quot;</span>);
+        clickOnElement(By.id(<span class="s2">&quot;product_attribute_3_7&quot;</span>));
+        clickOnElement(By.id(<span class="s2">&quot;product_attribute_4_9&quot;</span>));
+        <span class="s3">//clickOnElement(By.id(&quot;product_attribute_5_10&quot;));</span>
+        clickOnElement(By.id(<span class="s2">&quot;product_attribute_5_12&quot;</span>));
+        Thread.sleep(<span class="s4">3000</span>);
+
+    }
+
+
+}
+
+
+
+
+</pre>
+</body>
+</html>
